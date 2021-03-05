@@ -1,0 +1,35 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: coboldb2sample
+spec:
+  schedule: "1/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: coboldb2sample
+            image: avinash4891/coboldb2base
+            env:
+            - name: DB2SERVERIP
+              value: 34.71.243.134
+            - name: DB2SERVERPORT
+              value: "50000"
+            - name: DBNAME
+              value: SAMPLE
+            - name: PGM
+              value: DB2CRUD
+            - name: GITUSER
+              value: avinash4891
+            - name: GITPASS
+              valueFrom:
+                secretKeyRef:
+                  name: git-secret
+                  key: password
+            - name: GITREPO
+              value: CobolDB2
+            command: ["/bin/sh","-c"]
+            args: ["cd /src && sh run.sh"]
+            imagePullPolicy: Always
+          restartPolicy: Never

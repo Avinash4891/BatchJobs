@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cobol-docker-job
+  labels:
+    app: cobol-docker
+spec:
+  template:
+    spec:
+      containers:
+      - name: filesamp-cobol
+        volumeMounts:
+        - mountPath: "/input/"
+          name: binput
+        image: avinash4891/filesamp:v3
+        command: ["/bin/bash","-c"]
+        args: 
+           - cd input;
+            /src/filesamp-exe
+      volumes:
+        - name: binput
+          persistentVolumeClaim:
+            claimName: fileserver-claim
+      restartPolicy: Never
